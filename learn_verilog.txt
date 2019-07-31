@@ -1,0 +1,234 @@
+
+//////////////////////////////////////////////////////////
+a or b or c: neu 1 trong 3 cai nay thay doi = 1 
+sum = a^b ( a xor b)
+
+
+
+1 module co the nam trong 1 module lon hon
+
+
+input: wire[3:0] a (  input chac chan la wire)
+
+
+str = {[str],[str sub]}  (string concanate)
+
+`define : thay chuoi
+paramaters : constant
+
+tim hieu " local paramater & paramater "
+
+input/inout : wire
+
+mux ,decoder , register , FA 4bit
+//////////////////////////////////////////////////////////
+
+
+
+Chapter 2:
+
+To declare a new module:
+module module name( port name, port name,....);
+<...>
+endmodule
+
+Ex:
+module data_conv(a,b,..);
+input[3:0] a;
+inout b;
+output [15:0] g;
+
+
+input has to be "wire" ( data type)
+
+
+
+"instances" is a object of a module
+
+
+We can connect with module instance port by name as well as order
+
+Ex:
+Assume we have: 
+
+module modB(wa,wb);
+<...> 
+endmodule
+
+To connecting
+By name: modB b1(.wb(v[3]),.wa(v[2]));
+By order: modB b(v[2],v[3]);
+
+
+Chapter 3:
+
+<size>'<base_format><num>
+Ex:
+
+10'hFA : 10bits hex num FA (00_1111_1010)
+
+6'd30: 6bits decimal num 30
+
+4'b0 == 4'b0000
+(number can present by z & x )
+-8'd6 2's complement of 6 in 8bits
+
+
+
+Strings: are var of 'reg' type
+Ex: 
+module str_test;
+reg [8*14:1] strvar;
+initial begin 
+	strvar = "Hello";
+	$display("%s is stored as %h",strvar,strvar);
+	strvar = {strvar,"!!!"} // str concatenation
+	$display("%s is stored as %h",strvar,strvar);
+end
+end module
+
+
+MACRO
+`define == DEFINE AS STRING (text macro)
+`include: share code in a module
+`ifdef,`else,`endif
+`timescale 1ns/100ps: sats the time unit and time precision in a module
+`resetall
+
+Data types
+
+Net: should remember  'wire'
+
+Variable: 
+reg: unsigned int var of varying bit width
+integer: 32-bit signed integer
+time: 64-bit unsigned integer
+real: signed floating-point
+realtime: store time as a real value
+
+
+Array: reg[7:0]x[0:10] 
+
+
+Parameters const 
+2types of paramater: 1. module parameter (parameter and localparam)
+							
+					localparam: can NOT be change outside of a module
+					 parameter: can be changed in some way (outside of a module)
+
+					 2. specify parameter (specparam)
+
+					 Ex:
+					 module ....
+					 ...
+					 specify 
+					 	specparam T=10,t=5;
+					 	(in=>out) = (T,t);
+					 endspecify
+					 ....
+					 endmodule
+					 ** invisible outside of the "specify" block
+					 ** 'defparam' cannot be used to override a specparam 
+
+always statement: just 'reg' can modify 
+
+
+
+
+
+
+
+Chaper 4:
+Array of instances
+
+wire[7:0] OUT,IN1,IN2;
+nand n_gata[7:0](OUT,IN1,IN2)
+//equivalent to the following 8 instantiations
+nand n_gate0(OUT[0],IN1[0],IN2[0]);
+........
+nand n_gate7(OUT[7],IN1[7],IN2[7]);
+
+
+
+
+User-Defined primitives
+
+Example: combinational UDPs
+primitive test(OUT,ctrl,dataA,dataB);
+output OUT;
+input crtl,dataA,datB;
+table
+//
+0 1 ? : 1 ; // ? = 0 1 x
+0 0 ? : - ; // - = no change
+....
+endtable
+endprimitive
+
+
+
+Chaper 5:
+
+Dataflow model: using expression instead of primitive gates
+
+
+assign out = i1 & i2; 
+Left-hand side (wire either vector or scalar)
+Right-hand: wire,reg,function call ( any expression that gives a value)
+
+Example: 
+wire out = in1 & in2;
+assign addr[15:0] = addr1_bits[15:0]^addr2_bits[15:0];
+assign {c_out,sum[3:0]} = a[3:0] + b[3:0] + c_in; // concatenation // FA circuit
+
+Common error:
+not assigning a wire to a value ( value: var,num,net)
+assigning a wire to a value more than one
+Left hand side is NEVER a reg variable
+
+Arithimetic operators: + - * / ** , neg number, pos number
+
+Logical operators: (evaluating statement only is true or false)
+!: logic negation
+&&: logical and
+||: logical or
+*Treat all values that are nonzero as "1"
+
+Logical and Case equality Operators: ==, !=, ===, !===
+== ( tests for 1 and 0) ( if contain a x,z bit compare 0,1 bit == x(immediately) )
+						( if contain a x,z bit compare x,z bit => continue to compare )
+!= : 1100 != 100X : the result = 1
+=== (tests for 1,0,x,z) (if 100% the same value ( including x,z) => true)
+
+
+Relational operators:<,>,<=,>=
+*the result is x if any of the operands has a 'x' or 'z' bit
+
+
+
+Bit-wise operator ~,&,|,^(xor),^~ or ~^ (xnor)
+
+~x = x
+~z = x
+(0,1,x,z) & z = x
+(0,1,x,z) | z = x 
+
+
+Unary Reduction operators:(toan tu? 1 ngoi) &,~&,|,~|,^,^~,~^
+EX: A=4'b1101;
+B=&A; // 1&1&0&1 =0
+
+
+Shift operators
+<< , >> for unsigned  data type ( filling with 0)
+8'b0110_0111<<1'bz ==  8'bxxxx_xxxx
+
+
+<<<,>>> for signed data type (<<< filling with the value of the sign bit , >>> filling with 0)
+
+
+Concatenation operation: Ex {a,b[3:0],c,4'b1001} // if a,c are 8bit num => result has 24bits
+
+Replication: {3{a}} // {a,a,a} (multipliers must be const)
+Nested concatenation and replication: {b,{3{c,d}}} // { b,c,d,c,d,c,d}
+Conditional operator: cond_expr ? true_expr : false_expr
