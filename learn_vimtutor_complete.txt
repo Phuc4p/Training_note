@@ -1,0 +1,100 @@
+x ==delete
+hjkl==LDUR
+i == insert
+A == move cursor to the end of the line
+a == insert mode ( like i but difference is where chars are inserted)
+R == replace ( replace a current word by new word) 
+j: move to end of next line
+
+
+DEL operator
+dw=del a word until START  of the next word, excluding nhung tu` trc no
+d$ ($=shift 4) = del a line 
+de==del to end of a word
+d [n] [option] (n:number of word u want to del) :ex d2w
+(dw,d$,de start to del from the current cursor)
+
+*dd: del a whole line
+
+
+MOVE
+w: move cursor to start of the next word
+2w,2e ( 2 lan` lenh w , 2 lan` lenh e )
+e: ....end
+0: start of new line
+
+UNDO: u: undo last cmd , U to fix a whole line
+^R: redo
+
+:q!== unsaved exit
+:wq==save exit
+
+
+
+TO PUT THE OLD LINE: 1. dd a line => press p to put the line to the cursor
+
+REPLACE:
+ rx => r'a' replace 'a' to cursor
+ ce => del cursor to the end of word then replace
+ cw 
+ c$ ( like ~~ dw,de,d$)	
+ c [number] [option]:Example : c4$
+
+
+
+
+CTRL+G: show current pages / total pages 
+G:bottom of the file
+gg:start of the file
+[page number]+G => Go that page
+
+
+Searching(forward): /[keyword] then <ENTER> , next same phrase:n , N: opposite
+.........(backward):?[keyword]..... ctrl+O(back further),ctrl+I forward
+
+
+%: to find the rest of parenthesss (USEFUL TO BEBUG WITH UNMATCHED PARENTHESES!)
+
+
+
+
+SUBSTITUTE COMMAND
+:s/old/new/g ( as substitute perl ): change current line
+
+:%s/old/new/g (change whole file)
+
+:#,..,#s/.... (#,..,# are the lines affected)
+
+:%s/old/new/gc ( find in whole file with a prompt whether to substitute or not
+
+
+Type: ':!' then usr can write like terminal ,Ex: :!ls
+
+
+
+SAVE part of a file : press v to fill what need to save , then press :w TEST (TEST: filename u want to save)
+
+:r TEST : to retrieve a file
+
+
+
+
+
+OPEN a new line: press o=>insert mode new line below the cursor, O insert mode and above cursor
+
+
+
+Search:
+:set ic :(ignore case): now we can search IGNORE igNORE.....
+to remove this setting: :set noic
+
+:set hls is : highlighting search and show a partial matches for a search pharse
+=>TO disable: :nohlsearch :noincsearch or :set nohls nois
+
+use ignore case 1 time use \c: Ex ( search ignore) /ignore\c
+
+
+
+
+
+

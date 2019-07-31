@@ -1,0 +1,138 @@
+git checkout <commit id>
+git diff <id 1> <id 2>
+git log (to view commit history)
+git log -n [number] (Ex: git log -n 1 show 1 commit)
+
+
+git status ( show which files have changed since the last commit)
+
+
+
+
+How to create empty repository : git init (in directory u want)
+
+Add files to staging area : git add [file]
+( file are added by "git add" , now if i created a commit => these files would be includeds)
+
+To create a commit: git commit
+
+To compare working directory files and staging area: git diff
+To compare staging area and lastest commit: git diff --staged
+To discard any changes in either the working directory or the staging area : git reset --hard
+Staging area: is a copy of the most recent commit until u add changes to it
+
+
+BRACHES
+create repository => auto create 'master' ( main branch)
+
+git branch ( with no argv ) : show the current branches
+git branch [name] : create a new one 
+*: current position , file with update in here if it's changed
+
+=> git checkout [name] : to switch to branch [name]
+
+git log --graph --oneline [branch1] [branch2] ( to visualize branch structure)
+
+
+REACHABILITY: if a commit isn't stored in any branch , it cant be reachable ( except u write down ID commit)
+( See picture reachability) ( commits just know commit's parent)
+
+
+If you want to create a new branch to retain commits you create, you may do so (now or later) by using -b with the checkout cmd again. 
+=> git checkout -b new_branch_name (have to run 'git checkout [IDcommit]' before) == 2 cmd: 'git branch new_branch_name' and 'git checkout new_branch_name'
+
+git branch -a ( more detail)
+
+MERGE
+
+To merge to branch into 1: git merge [branch1] [branch2] ( * is branch1 => merge branch2 into branch1) => commit popup
+
+git show [commit ID] : what changes were introcduced by a commit compared to its parent
+
+git branch -d [branch1] : delete the branch 'branch1' when finished merging
+
+
+If u merge 2 branches which have the same file ( have been changed in each branch) => git will warn u like: 'CONFLICT (content): Merge conflict in ...' 
+
+WHEN CONFLICT: 1. Go to the conflict file: Search where conflict ( represent by a bunch of '<<<<<<<<[name]' or ||||||||| or <<<<<<<<[name], ========)
+2. fix the conflict and save file
+3. run 'git status' to check 
+4. run 'git add [conflict file]' , git commit ( git will be auto fill a commit message ,if u still merge these branches)
+
+
+
+
+
+
+
+
+LEC3
+
+
+
+
+
+git remote ( to view )
+git remote -v ( more information)
+git remote add [remote] [link github]
+
+git push [the remote want to change] [local branch] :to send the changes to the remote
+
+to editing on github see LEC 77
+
+
+git pull [remote] [branch want to pull]
+
+clone: copy a new file from pc to github , new directories
+fork : feature of github ( only used within the context of Github) 
+
+To get a clone: git clone [link]
+
+
+get fetch origin : update all local copies of every branch for 'origin' remote ( not affect a commit in pc )
+
+O*=>O (origin/master)
+ |
+ *=>O (master)
+when ( get fetch)
+
+After get fetch => u have to merge (origin/master vs master ): git merge master origin/master ( handle conflict like previous lession )
+
+
+PULL REQUEST: LEC 94 
+
+
+HANDLE CONFLICT ON GITHUB: git pull origin master ( download new file from github  ) 
+=>git merge (in other branch,not master branch) => to merge current master file and origin/master 
+=> vim [file] to edit conflict file => git add [file] => get commit =>  get push origin [branch]
+
+
+
+KEEP FORK UP TO DATA:
+Assume: branch: stop_drop_roll (stop_drop_roll: this feature is on your PC & Fork NOT original)
+git remote add upstream [URL] (Original URL)
+git checkout master
+git pull upstream master ( download FROM original)
+git checkout stop_drop_roll
+git merge master stop_drop_roll
+(handle merge conflict)
+git push origin stop_drop_roll ( upload to your Fork )
+
+
+
+
+
+
+
+
+
+GITHUB: i'v been upload some branches on github
+=> to git file in these branch which are not 'master'
+=> git clone
+=> check branchese are exists: git branch -a
+To switch to these branches: git checkout [branch]
+
+OR get pull [branch] ( branch u want to use not 'master' Ex want to use branch 'testv1' : get pull origin testv1)
+check git log and git branch -a (for sure) 
+
+

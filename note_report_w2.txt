@@ -1,0 +1,11 @@
+mach to hop: quan trong nhat la bang su that
+(sap xep hop li bang chan tri)
+
+
+decoder (tai. 1 thoi diem chi co 1  output = 1 )
+encoder ( tai. 1 thoi diem chi co 1 input = 1 )
+priority encoder ( tranh truong hop  1 luc nhieu ngo vao = 1 )
+FF ( tich cuc theo canh , luu gia tri )
+S-R FF( thiet lap gia tri cho output S= set , R= reset)
+
+chuc nang cua FF ? ( ve tim hieu)
