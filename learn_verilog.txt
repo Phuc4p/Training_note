@@ -268,10 +268,9 @@ $stop/$finish(system task) to halt the simulation
 
 
 
-Continuos assignments drive 'nets', are evaluated and updated whenever an input
-operand changes value.
+**Continuous assignments drive 'nets', are evaluated and updated whenever an input operand changes value.
 
-Procedural assignments update the value of variables under the control of procedural flow
+**Procedural assignments update the value of variables under the control of procedural flow
 constructs that surround them
 
 
@@ -460,4 +459,77 @@ designer should concern: - the design has been verified by (functional) simulati
 
 
 
-Race condition
+
+
+
+
+SLIDE 41 RTL coding-> simulation -> synthesis
+Trong quartus lai la` synthesis xong moi simulation
+
+Slide 50 (= / <= nhu nhau dung khong?)
+
+Slide 45 if/else dc thuc thi cung` 1 luc?
+
+Slide 65 ?? blocking where????
+
+
+
+
+
+
+Race condition: more than 1 always block using the same delay condition
+
+Coding guidelines
+
+
+
+TIP:
+1) sequential logic => should use nonblocking assignment
+2) combinational logic => should use blocking assignment
+3) sequential logic & combinational logic within the same always block => use nonblocking assignments
+4)do NOT mix blocking and non-blocking assignments IN THE SAME ALWAYS BLOCK 
+5)do NOT make assignment to the same variable from more than one always block
+
+
+
+
+
+
+
+
+TIP: USING procedural assignment
+
+The rules for combinational logic:
+1> Every inputs must be in sensitivity list
+2> The combinational output must be assigned in every control path
+
+Best style ex:
+
+always @(*)
+	begin
+		wk1=a|b;
+		wk2=c&d;
+		y=wk1^wk2;
+	end
+end
+
+
+
+TIP sequential logic: latches are combinational circuits
+
+*If event-expr contains posedge or negedge => FF will be synthesized
+
+*A variable assigned within an always @ block that is not fully specified will result in latches synthesized
+(not understand)
+*Other => combinational logic
+
+
+
+
+Tip systhesizable coding 
+
+Should 
+->limited loops
+-> no initial
+-> limited operators
+-> use assign statement when possible
