@@ -97,7 +97,7 @@ MACRO
 
 Data types
 
-Net: should remember  'wire'
+Net: should remember  'wire' can be assigned in an initial/always block ( 0 , 1 , x,z)
 
 Variable: 
 reg: unsigned int var of varying bit width
@@ -138,7 +138,7 @@ always statement: just 'reg' can modify
 
 
 
-Chaper 4:
+Chapter 4:
 Array of instances
 
 wire[7:0] OUT,IN1,IN2;
@@ -167,7 +167,7 @@ endprimitive
 
 
 
-Chaper 5:
+Chapter 5:
 
 Dataflow model: using expression instead of primitive gates
 
@@ -232,3 +232,232 @@ Concatenation operation: Ex {a,b[3:0],c,4'b1001} // if a,c are 8bit num => resul
 Replication: {3{a}} // {a,a,a} (multipliers must be const)
 Nested concatenation and replication: {b,{3{c,d}}} // { b,c,d,c,d,c,d}
 Conditional operator: cond_expr ? true_expr : false_expr
+
+
+
+
+Chapter 7: behavioral modeling
+
+- More like a procedure in a programming language 
+- program describes input/ouput behavior of circuit (dont care primitive gates )
+- easy to write testbenches
+
+
+
+
+initial & always can be nested
+
+
+initial executes ONCE,
+always executes REPETITIVELY
+
+they contain behavioral statements like: if..else,case,loop statements.
+
+
+
+
+
+Always construct
+
+always may be followed by event control (@), delay control (#), wait statement
+
+$stop/$finish(system task) to halt the simulation
+
+
+
+
+
+
+Continuos assignments drive 'nets', are evaluated and updated whenever an input
+operand changes value.
+
+Procedural assignments update the value of variables under the control of procedural flow
+constructs that surround them
+
+
+procedural assignment: there are 2 types of procedural assignment:blocking and non-blocking
+
+Blocking procedural assignment: 
+Ex: a_sig = b_sig => execution of the next line is blocked until this assignment is done
+Non-blocking procedural assignment
+Ex: a_sig <= b_sig => execution of the next line is not blocked by this line
+
+
+= : blocking => used to describe the combinational logic
+<= : non-blocking => used to describe the sequential logic
+
+
+**Blocking assignment is executed before the execution of other statements that follow it in
+sequential block,but CAN NOT BLOCK in parallel block
+
+ *begin...end: sequential block: statements are executed in serial
+ *fork...join: parallel block: ..... concurrently
+
+
+In non-blocking
+Ex:
+initial begin 
+a<= #4 0; schedules a = 0 at time 4
+a<= #4 1; schedules a = 1 at time 4
+end // at time 4, a = 1
+
+two procedural blocks are executed CONCURRENTLY: 
+Ex:
+reg a;
+initial a = 1;
+initial a <= #4 0; 
+initial a <= #4 1;
+at time 4 , a = ?? (value of the reg is indeterminate)
+
+
+Continuos  assignment: assign values to wires
+Procedural assignment: assign values to variables
+
+two additional forms: ( procedural continuous assignment0)
+
+assign/deassign: 
+Ex assign a =b ( LHS: varible,concanation of variable)
+force/release a=b ( LSH: variable,net,concatenation of variable and net)
+
+
+
+Procedural continous assignment (PCA)
+ the assign PCA statment will overide all PA to a varible
+ the deassign => end a PCA to a variable => variable's value remain the same until the variable
+ is assigned a new value through PA or PCA
+
+
+
+ force-release have a similar effect to the assign/deassign ( force can be assigned 'wire')
+
+
+
+
+
+begin-end/fork-goin can be embbeded within each other
+
+
+Named blocks example: find the 1st bit with a value 1 in flag
+
+reg[15:0] flag;
+integer i;
+initial
+begin
+	flag = 16'b 0010_0000_0000_0000;
+	i = 0
+	begin: block1// the main block inbside while is named block1
+		while(i<16)
+		begin
+		if(flag[i])
+			disable block1; // disable block1 (stop the block) 
+		i = i + 1;
+		end
+	end
+end
+
+
+
+Statements
+
+Conditional statments
+
+
+if-else if - else
+
+Ex:
+if(<expression>) begin
+	<...>
+end
+else if (<expr>) begin
+	<...>
+end
+else begin
+	<...>
+end
+
+
+
+Case statement:
+	case : compare each bit
+	casez: treat z or ? as x value
+	casex: treat x,z,? as x value
+
+Ex: case(op)
+	2'b00: y = a+b;
+	2'b01: y = a-b;
+	2'b10: y = a^b;
+	default: y= 'hxxxx; (NOTE)
+
+Loop statement
+
+FOR STATEMENT
+Ex:
+
+reg[3:0] i,output
+for(i=0;i<=15;i = i + 1) begin
+ 	output = i;
+end
+
+while statement:
+while(expr) begin
+ <....>
+ end
+
+ repeat statment:
+
+ repeat(value) begin // value == a fixed number => repeat 'value' times
+ <..>
+ end
+
+
+ forever statemnt:
+
+ EX: //clk generation, use forever loop instead of always blk
+ initial begin
+ 	clock = 1'b0;
+ 	forever #10 clock = ~clock; // clk with period of 20units
+
+
+
+
+ Procedural timing ctrl
+
+ delay ctrl: #
+ event control: @ (edge-sensitive timing control)
+ statement: wait (level-sensitive timing control)
+
+
+
+
+Procedural timing control using with always statement:
+Ex: always @ (porsedge clk): negedge: transition from 1 to x,z,0 AND x,z to 0
+                             posedge: transition from 0 to x,z,1 AND x,z to 1
+
+ Procedural timing control
+ fork
+ 	begin: event_expr
+ 	@ev1
+ 	repeat(3)@trig;
+ 	#d action (areg,breg);// call task
+ 	end
+ 	@rs disable event_expr;
+ join
+ => event_expr block waits for event 'ev1' and 3 times event 'trig' ,plus 'd' delay time 
+ then the task 'action' executes
+ => 'rs' occurs, regardless of events within the sequential block, the fork join block terminates
+
+
+
+
+
+
+
+Logic synthesis
+
+designer should concern: - the design has been verified by (functional) simulation
+						 or RTL code is ok for simulation but non-synthesizable(unable to implement on hardware)
+
+
+
+
+Race condition
