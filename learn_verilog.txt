@@ -27,216 +27,215 @@ mux ,decoder , register , FA 4bit
 
 Chapter 2:
 
-To declare a new module:
-module module name( port name, port name,....);
-<...>
-endmodule
+1> To declare a new module:
+	module module name( port name, port name,....);
+	<...>
+	endmodule
 
-Ex:
-module data_conv(a,b,..);
-input[3:0] a;
-inout b;
-output [15:0] g;
+	Ex:
+	module data_conv(a,b,..);
+		input[3:0] a;
+		inout b;
+		output [15:0] g;
+	endmodule
+	
 
-
-input has to be "wire" ( data type)
-
-
-
-"instances" is a object of a module
+	*input has to be "wire" ( data type)
 
 
-We can connect with module instance port by name as well as order
 
-Ex:
-Assume we have: 
+2>"instances" is a object of a module
 
-module modB(wa,wb);
-<...> 
-endmodule
 
-To connecting
-By name: modB b1(.wb(v[3]),.wa(v[2]));
-By order: modB b(v[2],v[3]);
+	We can connect with module instance port by "name" as well as "order"
+
+	Ex:
+	Assume we have: 
+
+	module modB(wa,wb);
+	<...> 
+	endmodule
+
+	To connecting:
+		+By name: modB b1(.wb(v[3]),.wa(v[2]));
+		+By order: modB b(v[2],v[3]);
 
 
 Chapter 3:
+1>Number:
+		<size>'<base_format><num>
+		Ex:
 
-<size>'<base_format><num>
-Ex:
+			10'hFA : 10bits hex num FA (00_1111_1010)
 
-10'hFA : 10bits hex num FA (00_1111_1010)
+			6'd30: 6bits decimal num 30
 
-6'd30: 6bits decimal num 30
-
-4'b0 == 4'b0000
-(number can present by z & x )
--8'd6 2's complement of 6 in 8bits
-
-
-
-Strings: are var of 'reg' type
-Ex: 
-module str_test;
-reg [8*14:1] strvar;
-initial begin 
-	strvar = "Hello";
-	$display("%s is stored as %h",strvar,strvar);
-	strvar = {strvar,"!!!"} // str concatenation
-	$display("%s is stored as %h",strvar,strvar);
-end
-end module
+			4'b0 == 4'b0000
+			(number can present by z & x )
+			-8'd6 2's complement of 6 in 8bits
 
 
-MACRO
-`define == DEFINE AS STRING (text macro)
-`include: share code in a module
-`ifdef,`else,`endif
-`timescale 1ns/100ps: sats the time unit and time precision in a module
-`resetall
 
-Data types
-
-Net: should remember  'wire' can be assigned in an initial/always block ( 0 , 1 , x,z)
-
-Variable: 
-reg: unsigned int var of varying bit width
-integer: 32-bit signed integer
-time: 64-bit unsigned integer
-real: signed floating-point
-realtime: store time as a real value
+2>Strings: are var of 'reg' type
+	Ex: 
+		module str_test;
+		reg [8*14:1] strvar;
+		initial begin 
+			strvar = "Hello";
+			$display("%s is stored as %h",strvar,strvar);
+			strvar = {strvar,"!!!"} // str concatenation
+			$display("%s is stored as %h",strvar,strvar);
+		end
+		end module
 
 
-Array: reg[7:0]x[0:10] 
+3>MACRO
+	`define == DEFINE AS STRING (text macro)
+	`include: share code in a module
+	`ifdef,`else,`endif
+	`timescale 1ns/100ps: sats the time unit and time precision in a module
+	`resetall
+
+4>Data types
+
+	Net: should remember  'wire' can be assigned in an initial/always block ( 0 , 1 , x,z)
+
+	Variable: 
+		reg: unsigned int var of varying bit width
+		integer: 32-bit signed integer
+		time: 64-bit unsigned integer
+		real: signed floating-point
+		realtime: store time as a real value
+	**always statement: just 'reg' can modify 
+
+	Array: reg[7:0]x[0:10] 
 
 
-Parameters const 
-2types of paramater: 1. module parameter (parameter and localparam)
+5>Parameters const 
+	2types of paramater: 
+					1. module parameter (parameter and localparam)
 							
-					localparam: can NOT be change outside of a module
-					 parameter: can be changed in some way (outside of a module)
+						localparam: can NOT be change outside of a module
+						parameter: can be changed in some way (outside of a module)
 
 					 2. specify parameter (specparam)
 
-					 Ex:
-					 module ....
-					 ...
-					 specify 
+					 	Ex:
+						module ....
+						...
+						specify 
 					 	specparam T=10,t=5;
 					 	(in=>out) = (T,t);
-					 endspecify
-					 ....
-					 endmodule
+					 	endspecify
+					 	....
+					 	endmodule
 					 ** invisible outside of the "specify" block
 					 ** 'defparam' cannot be used to override a specparam 
-
-always statement: just 'reg' can modify 
-
-
-
 
 
 
 
 Chapter 4:
-Array of instances
+1>Array of instances
 
-wire[7:0] OUT,IN1,IN2;
-nand n_gata[7:0](OUT,IN1,IN2)
-//equivalent to the following 8 instantiations
-nand n_gate0(OUT[0],IN1[0],IN2[0]);
-........
-nand n_gate7(OUT[7],IN1[7],IN2[7]);
-
-
-
-
-User-Defined primitives
-
-Example: combinational UDPs
-primitive test(OUT,ctrl,dataA,dataB);
-output OUT;
-input crtl,dataA,datB;
-table
-//
-0 1 ? : 1 ; // ? = 0 1 x
-0 0 ? : - ; // - = no change
-....
-endtable
-endprimitive
+	wire[7:0] OUT,IN1,IN2;
+	nand n_gata[7:0](OUT,IN1,IN2)
+	//equivalent to the following 8 instantiations
+	nand n_gate0(OUT[0],IN1[0],IN2[0]);
+	........
+	nand n_gate7(OUT[7],IN1[7],IN2[7]);
 
 
 
-Chapter 5:
 
-Dataflow model: using expression instead of primitive gates
+2>User-Defined primitives
 
-
-assign out = i1 & i2; 
-Left-hand side (wire either vector or scalar)
-Right-hand: wire,reg,function call ( any expression that gives a value)
-
-Example: 
-wire out = in1 & in2;
-assign addr[15:0] = addr1_bits[15:0]^addr2_bits[15:0];
-assign {c_out,sum[3:0]} = a[3:0] + b[3:0] + c_in; // concatenation // FA circuit
-
-Common error:
-not assigning a wire to a value ( value: var,num,net)
-assigning a wire to a value more than one
-Left hand side is NEVER a reg variable
-
-Arithimetic operators: + - * / ** , neg number, pos number
-
-Logical operators: (evaluating statement only is true or false)
-!: logic negation
-&&: logical and
-||: logical or
-*Treat all values that are nonzero as "1"
-
-Logical and Case equality Operators: ==, !=, ===, !===
-== ( tests for 1 and 0) ( if contain a x,z bit compare 0,1 bit == x(immediately) )
-						( if contain a x,z bit compare x,z bit => continue to compare )
-!= : 1100 != 100X : the result = 1
-=== (tests for 1,0,x,z) (if 100% the same value ( including x,z) => true)
-
-
-Relational operators:<,>,<=,>=
-*the result is x if any of the operands has a 'x' or 'z' bit
+	Example: combinational UDPs
+	primitive test(OUT,ctrl,dataA,dataB);
+	output OUT;
+	input crtl,dataA,datB;
+	table
+	//
+	0 1 ? : 1 ; // ? = 0 1 x
+	0 0 ? : - ; // - = no change
+	....
+	endtable
+	endprimitive
 
 
 
-Bit-wise operator ~,&,|,^(xor),^~ or ~^ (xnor)
 
-~x = x
-~z = x
-(0,1,x,z) & z = x
-(0,1,x,z) | z = x 
+Chapter 5: Dataflow modeling
+
+*Dataflow model: using expression instead of primitive gates
+*Continuous assignment: assignment wire = wire/reg/func call , LHS NEVER is REG
+
+	Left-hand side (wire either vector or scalar)
+	Right-hand: wire,reg,function call ( any expression that gives a value)
+
+	Example: 
+	wire out = in1 & in2;
+	assign addr[15:0] = addr1_bits[15:0]^addr2_bits[15:0];
+	assign {c_out,sum[3:0]} = a[3:0] + b[3:0] + c_in; // concatenation // FA circuit
+
+1>Common error:
+	not assigning a wire to a value ( value: var,num,net)
+	assigning a wire to a value more than one
+	Left hand side is NEVER a reg variable
+
+	a.Arithimetic operators: + - * / ** , neg number, pos number
+
+	b.Logical operators: (evaluating statement only is true or false)
+		!: logic negation
+		&&: logical and
+		||: logical or
+	**Treat all values that are nonzero as "1"
+
+	c.Logical and Case equality Operators: ==, !=, ===, !===
+		== ( tests for 1 and 0) ( if contain a x,z bit compare 0,1 bit == x(immediately) )
+		   ( if contain a x,z bit compare x,z bit => continue to compare )
+		!= : 1100 != 100X : the result = 1
+		=== (tests for 1,0,x,z) (if 100% the same value ( including x,z) => true)
 
 
-Unary Reduction operators:(toan tu? 1 ngoi) &,~&,|,~|,^,^~,~^
-EX: A=4'b1101;
-B=&A; // 1&1&0&1 =0
+	d.Relational operators:<,>,<=,>=
+	*the result is x if any of the operands has a 'x' or 'z' bit
 
 
-Shift operators
-<< , >> for unsigned  data type ( filling with 0)
-8'b0110_0111<<1'bz ==  8'bxxxx_xxxx
+
+	e.Bit-wise operator ~,&,|,^(xor),^~ or ~^ (xnor)
+
+		~x = x
+		~z = x
+		(0,1,x,z) & z = x
+		(0,1,x,z) | z = x 
 
 
-<<<,>>> for signed data type (<<< filling with the value of the sign bit , >>> filling with 0)
+	f.Unary Reduction operators:(toan tu? 1 ngoi) &,~&,|,~|,^,^~,~^
+		EX: A=4'b1101;
+		B=&A; // 1&1&0&1 =0
 
 
-Concatenation operation: Ex {a,b[3:0],c,4'b1001} // if a,c are 8bit num => result has 24bits
+	g.Shift operators
+		<< , >> for unsigned  data type ( filling with 0)
+			Ex: 8'b0110_0111<<1'bz ==  8'bxxxx_xxxx
 
-Replication: {3{a}} // {a,a,a} (multipliers must be const)
-Nested concatenation and replication: {b,{3{c,d}}} // { b,c,d,c,d,c,d}
-Conditional operator: cond_expr ? true_expr : false_expr
+
+		<<<,>>> for signed data type (<<< filling with the value of the sign bit , >>> filling with 0)
+
+
+	i.Concatenation operation: Ex {a,b[3:0],c,4'b1001} // if a,c are 8bit num => result has 24bits
+
+	j.Replication: {3{a}} // {a,a,a} (multipliers must be const)
+		=>Nested concatenation and replication: {b,{3{c,d}}} // { b,c,d,c,d,c,d}
+	k.Conditional operator: cond_expr ? true_expr : false_expr
 
 
 
 
 Chapter 7: behavioral modeling
+
+					-----------PART A-----------------
 
 - More like a procedure in a programming language 
 - program describes input/ouput behavior of circuit (dont care primitive gates )
@@ -245,98 +244,76 @@ Chapter 7: behavioral modeling
 
 
 
-initial & always can be nested
+1>-initial & always can be nested
+  -initial executes ONCE,
+  -always executes REPETITIVELY
+  -they contain behavioral statements like: if..else,case,loop statements.
+  -always construct: always may be followed by event control (@), delay control (#), wait statement => $stop/$finish(system task) to halt the simulation
 
 
-initial executes ONCE,
-always executes REPETITIVELY
+2>procedural assignment:
+	a.Difference between CA & PA:
+	**Continuous assignments drive 'nets', are evaluated and updated whenever an input operand changes value.
 
-they contain behavioral statements like: if..else,case,loop statements.
-
-
-
-
-
-Always construct
-
-always may be followed by event control (@), delay control (#), wait statement
-
-$stop/$finish(system task) to halt the simulation
+	**Procedural assignments update the value of variables under the control of procedural flow
+constructs that surround them ( inside blocks)
 
 
+	b.Procedural assignment: there are 2 types of procedural assignment:blocking and non-blocking
+
+	c.Blocking procedural assignment: 
+		= : blocking => used to describe the combinational logic
+
+		Ex: a_sig = b_sig => execution of the next line is blocked until this assignment is done
+	d.Non-blocking procedural assignment
+		<= : non-blocking => used to describe the sequential logic
+
+		Ex: a_sig <= b_sig => execution of the next line is not blocked by this line
+
+		**Blocking assignment is executed before the execution of other statements that follow it in sequential block,but CAN NOT BLOCK in parallel block
+		
+		*begin...end: sequential block: statements are executed in serial
+		*fork...join: parallel block: ..... concurrently		
+		**begin-end/fork-goin can be embbeded within each other
+		
+		In non-blocking
+		Ex:
+		initial begin 
+		a<= #4 0; schedules a = 0 at time 4
+		a<= #4 1; schedules a = 1 at time 4
+		end // at time 4, a = 1
 
 
 
 
-**Continuous assignments drive 'nets', are evaluated and updated whenever an input operand changes value.
-
-**Procedural assignments update the value of variables under the control of procedural flow
-constructs that surround them
-
-
-procedural assignment: there are 2 types of procedural assignment:blocking and non-blocking
-
-Blocking procedural assignment: 
-Ex: a_sig = b_sig => execution of the next line is blocked until this assignment is done
-Non-blocking procedural assignment
-Ex: a_sig <= b_sig => execution of the next line is not blocked by this line
+		NOTE: two procedural blocks are executed CONCURRENTLY: 
+		Ex:
+		reg a;
+		initial a = 1;
+		initial a <= #4 0; 
+		initial a <= #4 1;
+		at time 4 , a = ?? (value of the reg is indeterminate)
 
 
-= : blocking => used to describe the combinational logic
-<= : non-blocking => used to describe the sequential logic
-
-
-**Blocking assignment is executed before the execution of other statements that follow it in
-sequential block,but CAN NOT BLOCK in parallel block
-
- *begin...end: sequential block: statements are executed in serial
- *fork...join: parallel block: ..... concurrently
-
-
-In non-blocking
-Ex:
-initial begin 
-a<= #4 0; schedules a = 0 at time 4
-a<= #4 1; schedules a = 1 at time 4
-end // at time 4, a = 1
-
-two procedural blocks are executed CONCURRENTLY: 
-Ex:
-reg a;
-initial a = 1;
-initial a <= #4 0; 
-initial a <= #4 1;
-at time 4 , a = ?? (value of the reg is indeterminate)
-
-
+3>
 Continuos  assignment: assign values to wires
 Procedural assignment: assign values to variables
 
-two additional forms: ( procedural continuous assignment0)
-
-assign/deassign: 
-Ex assign a =b ( LHS: varible,concanation of variable)
-force/release a=b ( LSH: variable,net,concatenation of variable and net)
+two additional forms: ( procedural continuous assignment0) assign/deassign: 
+Ex assign a = b ( LHS: varible,concanation of variable)
+   force/release a=b ( LSH: variable,net,concatenation of variable and net)
 
 
 
-Procedural continous assignment (PCA)
- the assign PCA statment will overide all PA to a varible
- the deassign => end a PCA to a variable => variable's value remain the same until the variable
- is assigned a new value through PA or PCA
-
-
-
- force-release have a similar effect to the assign/deassign ( force can be assigned 'wire')
+4>Procedural continous assignment (PCA)
+ 	-the assign PCA statment will overide all PA to a varible
+ 	-the deassign => end a PCA to a variable => variable's value remain the same until the variable is assigned a new value through PA or PCA
+	- force-release have a similar effect to the assign/deassign ( force can be assigned 'wire')
 
 
 
 
-
-begin-end/fork-goin can be embbeded within each other
-
-
-Named blocks example: find the 1st bit with a value 1 in flag
+5>Named blocks example: find the 1st bit with a value 1 in flag
 
 reg[15:0] flag;
 integer i;
@@ -356,180 +333,371 @@ end
 
 
 
-Statements
+6>Statements
 
-Conditional statments
-
-
-if-else if - else
-
-Ex:
-if(<expression>) begin
-	<...>
-end
-else if (<expr>) begin
-	<...>
-end
-else begin
-	<...>
-end
+	a>Conditional statments
 
 
+	if-else if - else
 
-Case statement:
-	case : compare each bit
-	casez: treat z or ? as x value
-	casex: treat x,z,? as x value
-
-Ex: case(op)
-	2'b00: y = a+b;
-	2'b01: y = a-b;
-	2'b10: y = a^b;
-	default: y= 'hxxxx; (NOTE)
-
-Loop statement
-
-FOR STATEMENT
-Ex:
-
-reg[3:0] i,output
-for(i=0;i<=15;i = i + 1) begin
- 	output = i;
-end
-
-while statement:
-while(expr) begin
- <....>
- end
-
- repeat statment:
-
- repeat(value) begin // value == a fixed number => repeat 'value' times
- <..>
- end
-
-
- forever statemnt:
-
- EX: //clk generation, use forever loop instead of always blk
- initial begin
- 	clock = 1'b0;
- 	forever #10 clock = ~clock; // clk with period of 20units
+	Ex:
+	if(<expression>) begin
+		<...>
+	end
+	else if (<expr>) begin
+		<...>
+	end
+	else begin
+		<...>
+	end
 
 
 
+	b>Case statement:
+		case : compare each bit
+		casez: treat z or ? as x value
+		casex: treat x,z,? as x value
 
- Procedural timing ctrl
+	Ex: case(op)
+		2'b00: y = a+b;
+		2'b01: y = a-b;
+		2'b10: y = a^b;
+		default: y= 'hxxxx; (NOTE)
 
- delay ctrl: #
- event control: @ (edge-sensitive timing control)
- statement: wait (level-sensitive timing control)
+	c>Loop statement
+
+		**FOR STATEMENT
+		Ex:
+
+		reg[3:0] i,output
+		for(i=0;i<=15;i = i + 1) begin
+		 	output = i;
+		end
+
+		**while statement:
+		while(expr) begin
+		 <....>
+		 end
+
+		 **repeat statment:
+
+		 repeat(value) begin // value == a fixed number => repeat 'value' times
+		 <..>
+		 end
+
+
+		 **forever statemnt:
+
+		 EX: //clk generation, use forever loop instead of always blk
+		 initial begin
+		 	clock = 1'b0;
+		 	forever #10 clock = ~clock; // clk with period of 20units
 
 
 
 
-Procedural timing control using with always statement:
-Ex: always @ (porsedge clk): negedge: transition from 1 to x,z,0 AND x,z to 0
-                             posedge: transition from 0 to x,z,1 AND x,z to 1
+	 Procedural timing ctrl
 
- Procedural timing control
- fork
- 	begin: event_expr
- 	@ev1
- 	repeat(3)@trig;
- 	#d action (areg,breg);// call task
- 	end
- 	@rs disable event_expr;
- join
- => event_expr block waits for event 'ev1' and 3 times event 'trig' ,plus 'd' delay time 
- then the task 'action' executes
- => 'rs' occurs, regardless of events within the sequential block, the fork join block terminates
+ 		delay ctrl: #
+ 		event control: @ (edge-sensitive timing control)
+ 		statement: wait (level-sensitive timing control)
+
+		Procedural timing control using with always statement:
+		Ex: always @ (porsedge clk): negedge: transition from 1 to x,z,0 AND x,z to 0
+		                             posedge: transition from 0 to x,z,1 AND x,z to 1
+
+		Ex
+		fork
+		 	begin: event_expr
+		 	@ev1
+		 	repeat(3)@trig;
+		 	#d action (areg,breg);// call task
+		 	end
+		 	@rs disable event_expr;
+		join
+		Explaination
+ 		=> event_expr block waits for event 'ev1' and 3 times event 'trig' ,plus 'd' delay time then the task 'action' executes
+		=> 'rs' occurs, regardless of events within the sequential block, the fork join block terminates
 
 
 
+					-----------PART B-----------------
 
 
 
+1>Logic synthesis
 
-Logic synthesis
-
-designer should concern: - the design has been verified by (functional) simulation
+**Designer should concern: - the design has been verified by (functional) simulation
 						 or RTL code is ok for simulation but non-synthesizable(unable to implement on hardware)
 
 
 
 
 
+							------------Q&A-----------
 
 
+	SLIDE 41 RTL coding-> simulation -> synthesis
+	Trong quartus lai la` synthesis xong moi simulation
 
-SLIDE 41 RTL coding-> simulation -> synthesis
-Trong quartus lai la` synthesis xong moi simulation
+	Slide 50 (= / <= nhu nhau dung khong?)
 
-Slide 50 (= / <= nhu nhau dung khong?)
+	Slide 45 if/else dc thuc thi cung` 1 luc?
 
-Slide 45 if/else dc thuc thi cung` 1 luc?
-
-Slide 65 ?? blocking where????
-
-
-
-
-
-
-Race condition: more than 1 always block using the same delay condition
-
-Coding guidelines
-
-
-
-TIP:
-1) sequential logic => should use nonblocking assignment
-2) combinational logic => should use blocking assignment
-3) sequential logic & combinational logic within the same always block => use nonblocking assignments
-4)do NOT mix blocking and non-blocking assignments IN THE SAME ALWAYS BLOCK 
-5)do NOT make assignment to the same variable from more than one always block
+	Slide 65 ?? blocking where????
 
 
 
 
+2>Race condition: more than 1 always block using the same delay condition
+
+
+3>TIP:
+	1) sequential logic => should use nonblocking assignment
+	2) combinational logic => should use blocking assignment
+	3) sequential logic & combinational logic within the same always block => use nonblocking assignments
+	4)do NOT mix blocking and non-blocking assignments IN THE SAME ALWAYS BLOCK 
+	5)do NOT make assignment to the same variable from more than one always block
+
+
+
+	TIP model combinational logic
+		=>if the func is complex ,you dont know if you assigned to the outputs in every control path
+		=>so, set all outputs to some known value (should be 0) and write the rest of the code normally
+	
+	TIP using  @ to model combinational logic
+		Best style ( should be followed) example:
+
+		always @(*)
+			begin
+				wk1=a|b;
+				wk2=c&d;
+				y=wk1^wk2;
+			end
 
 
 
 
-TIP: USING procedural assignment
+	TIP: USING procedural assignment
 
-The rules for combinational logic:
-1> Every inputs must be in sensitivity list
-2> The combinational output must be assigned in every control path
+		The rules for combinational logic:
+			1> Every inputs must be in sensitivity list
+			2> The combinational output must be assigned in every control path
 
-Best style ex:
 
-always @(*)
+ 		The rules sequential logic: latches are combinational circuits
+
+			*If event-expr contains posedge or negedge => FF will be synthesized
+
+			*A variable assigned within an always @ block that is not fully specified will result in latches synthesized
+			
+			*Other => combinational logic
+
+4> Suggestion:
+		Should 
+		->limited loops
+		-> no initial
+		-> limited operators
+		-> use assign statement when possible
+
+
+
+
+
+Chapter 8:TASK AND FUNCTION
+
+1) Functions
+	 -Functions cannot include timing delays
+	 -Funcs have many input  & 1 output
+	 -Can be used for modeling combinatonal logic
+	 -Functions can call other 'funcs' but can not call 'tasks'
+
+	**internal implicit reg == the same name of the function =>return value == implicit reg
+	** <range of type> defines width ( default bit width =1 ) and type ( integer, real, time, realtime) of implicit reg
+
+
+To declare Func:
+	function  <range_or_type> func_name (<func_port_list>);
+		<input declaration(s)>
+		<variable_declaration(s)>
+
+		begin 
+			<statements>
+		end
+	endfunction
+
+2) Function rules
+	-not contain delay
+	-not enable tasks
+	-not any nonblocking assignments/PCA
+	-not 'event triggers'
+
+
+
+3) Tasks
+	-> tasks can be called many times ,reducing code repetition
+
+	-> can including timing delays
+
+	-> can call task or funtion
+
+	-> use for modeling both combinational and sequential logic
+
+	-> task must be specifically called with a statement, it cannot be used within an expression as a function can
+	-> task should be written in a separate file -> it can be used in multiple modules
+To declare: 
+	task <task_name> (<task_port_list>);
+	 <I/O declarations>
+	 <variable and event declarations>
 	begin
-		wk1=a|b;
-		wk2=c&d;
-		y=wk1^wk2;
+		<statement(s)>
 	end
-end
+
+	** input and inout argument are passed into the task
+	** output and inout arguments are passed back to the invoking statement when task is completed
+
+	Ex :
+	module sequence;
+	 reg clock;
+	 initial 
+	 begin ... end
+	 initial init_sequence;
+	 always asymmetric_sequence;
+
+	task init_sequence;
+		clock = 1'b0;
+	endtask
+
+	task asymmetric_sequence;
+	begin
+		#12 clock = 1'b0;
+		#5 clock = 1'b1;
+		#3 clock = 1'b0;
+		#10 clock = 1'b1;
+	end
+	endtask
+
+	endmodule
+
+
+To disabling tasks
+
+	task proc_a;
+	begin
+	...
+	...
+		if(a==0)
+			disable proc_a;
+		end
+	end
+
+
+4) Difference Func  & Task
+
+	Func:- can call func
+		 - no delay
+		 - no timing statement ( @,wait...)
+		 - at least 1 input
+		 -return on ly a single val
+	Tasks:- call both func & task
+		  -can include delay
+		  -allow timing statement
+		  -may have arbitrary I/O or inout
+		  -no return val
+
+
+	 Task == any common verilog code
+
+	 Func == func are used when common code is purely combinational => are used for conversions and commonly used calculation
+
+
+5) Sameness:do not contain initial/always 
+			contain only procedural assignment => called from initial or always statements
+			Func & Tasks can take, drive and source global variables, when no local variables are used.
+
+
+6) systemtasks & function: there are some categories as follows:
+	-display taks
+	-file i/o tasks
+	-simulation control tasks
+	-math functions
 
 
 
-TIP sequential logic: latches are combinational circuits
-
-*If event-expr contains posedge or negedge => FF will be synthesized
-
-*A variable assigned within an always @ block that is not fully specified will result in latches synthesized
-(not understand)
-*Other => combinational logic
 
 
+Chapter 8: finite state machines
+
+Tips on FSM Don't forget to handle the "default" for case statement
+Should use 2 different always blocks for next state and current state circuit
+Outputs can mix comb. and sequen.
+
+Example: in quartus
 
 
-Tip systhesizable coding 
 
-Should 
-->limited loops
--> no initial
--> limited operators
--> use assign statement when possible
+
+
+Chapter 9 
+
+1> 	Pre-synthesis verification:
+	+ check design func flaw : ambiguos problem, designer errors/incorrect use of parts in the design
+	+ Done by simulation,assertion verification with testbench/input waveform
+	
+	Procedure to verify a IP core/chip: 1. Test plan -> 2. Identify test case-> 3. testbench -> 4.simulation -> 5.debug -> 6.coverage
+
+
+2>
+Function verification with input waveform  => usually good for small design
+
+Function verification with testbench: 
+	=> Using verilog language for testing design module -> testbench
+	=> testbench is a code for TEST, not a part of final design
+	=> timing & display procedures: important in designing testbench
+
+
+
+3> Testbench:
+	In testbench, a dummy template which basically declares input/inout to DUT as reg and outputs from DUT as wire ( NO LIST FOR THE testbench)
+
+
+	There are 2 styles
+			1> Style 1: stimulus and design block instantiated in a Dummy top-level module
+
+				develop a module design , a module test => these connect together within a module testbench 
+
+			2> Style 2: stimulus block instantiates design block
+	 
+				example in quartus
+
+
+	Testbench techniques:
+		+$stop can resume the simulation ,but $finish cannot
+		
+		+instead of setting simualation time limit, u can pt a limit on the number of data put on inputs of a DUT
+
+		+should synchronize data with clock
+		Ex: initial forever @(posedge clock) #3 x=$random;
+
+		+synchronized display of result
+		Example: initial forever @(posedge clock) #1 $display(z);
+
+
+	Test cases
+
+		** Test data have to cover: typical cases , all possible state change , corner cases
+
+		** Test state change: you must have the state transition matrix of yor logic=> u have to apply data which causes all the possible transition of the state => without the 'matrix' => cannot verify the logic
+
+		** Have to have a 'good sensitivity' to figure out what kind of data may be critical & various logic 		 
+
+
+!!!Many kind of bugs escape through RTL simulation test
+
+4>Follow these step to test your design:
+	
+	1)	Check if CODE and STATE TRANSITION MATRIX is identical ( if not,correct code)
+	2) Carefully select test data
+	3) Run simulation
+	4) If exactly same to the expected result -> Is there any possibility that any bugs get out of the test? simulation OK but the code maybe not!!!
+	5) If NOT STATE TRANSITION MATRIX and the result -> Code wrong?-> If yes, correct code -> Otherwise correct "the matrix"
