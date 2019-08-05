@@ -119,3 +119,188 @@ syntax:
 		~	1.6	used at the beginning of a filename to indicate home directories
 		{ }	4.2	used to specify groups of arguments with common parts
 ----------------------------------------awk cmd-------------------------------------------------
+LEC1:
+1> syntax 
+	pattern {action}
+	Ex:  awk '$3 > 0 { print $1, $2 * $3 }' emp.txt
+
+	$1 , $2 , $3 NOT specified fileds NOT argument
+
+2>NF = number of field (change every line when excuting a file)
+  NR = counting the number of lines read so far. 
+
+3> We can put a text in the output
+	ex: { print "total pay for", $1,"is",$2*$3}
+
+4> we can use printf instead of print
+ (like C language)
+5>To sort: awk '{}' [file] | sort
+
+
+6> Select by text content
+	$1 == "Susie" => /Susie/
+7>  Combination of patterns:
+ &&,||,!
+8> BEGIN and END => print BEGIN {....} before execute awk,and print awk after execute awk
+=> We can compute in 'awk' and print a final result in END statement
+
+8>String concatenation
+Ex {names =names $1 " "}
+
+9> Built-in func: Ex: {print $1,length($1)}
+
+10>Control-flow statement
+
+	a.if-else statement 
+		syntax:
+		{ if(expr)
+		   ....
+		   ...
+		   else 
+		   ...
+		}
+	b.while statement
+		syntax:
+		{
+		while(expr)
+		{....}
+		}
+	c.for statement
+		syntax
+		{
+			for (i ; 1; i <; $3; i i + 1)
+				printf("\t%.2f\n", $1 * (1 + $2) A i)
+		}
+11> Array:
+ go from 1 to n
+12> A handful of useful "One-liners"
+
+
+
+LECTURE2:
+
+	To print in multiple lines
+	{ print $1,$3}
+	
+	==
+	
+	{print \
+	$1,
+	$3
+	}
+
+
+
+Some operator: ~ matched by ,
+		  !~ not matched by
+
+	a.String operation:
+		"Canada" < "China" == 1
+		"Asia" < "Asian" ==1
+	$0 >= "M" => Select lines that begin with m,n,o,....
+
+	b.Pattern matching
+
+		/Asia/ => string contain 'Asia'
+
+		we can  use an explicit matching operator:
+			Ex: $4 ~ /Asia/
+	c.Regular expression
+
+	[A-Za-z]
+	[^0-9] matches any char except a digit
+	^ which matches beging of a string
+	$ ....end
+	. match any single char
+	[ABC] : any of character A B C
+	A|B : matches A or B
+	A* : matches zero or more A's
+	A+ : 1 or more A's
+	A? : 1 or 0 A
+	() : (r) matches the smae string as r does 
+	\ => treat next char as non-metachar
+
+
+	Range patterns:
+
+	pat1,pat2 => a range pattern matches each line between an occurence of pat1  and pat2
+	**if pat2 doesnt match any pattern => print to the end of the file
+
+	example: NR==10,NR==20
+			/str1/,/str2/
+
+1> Built-in variables
+
+ARGC 	 : number of command-line arguments
+ARGV 	 : array of command-line arguments
+FILENAME : name of current input file
+FNR 	 : record number in current file
+FS       : controls the input field separator " "
+NF 		 : number of fields in current record
+NR 		 : number of records read so far
+OFMT  	 : output format for numbers "%.6g"
+OFS 	 : output field separator II II
+ORS 	 : output record separator 11\n"
+RLENGTH  : length of string matched by match function
+RS 		 : controls the input record separator "\n"
+RSTART 	 : start of string matched by match function
+SUBSEP 	 : subscript separator "\034"
+
+2> Built-in string funcs
+
+gsub(r,s) 		:substitute s for r globally in $0
+	return num of substitutions made
+
+gsub(r ,s ,t)	:substitute s for r globally in string t
+	return num of substitutions made
+
+index(s ,t)		:return first position of string t in s, or 0 if t is not present
+
+length(s)		:
+
+match(s ,r)		:test whether s contains a substring 
+	return index or 0; sets RSTART and RLENGTH
+
+split(s ,a)		: split s into array a on FS, return number of fields
+
+split(s ,a ,fs)	: splits into array a on field separator fs,return number of fields
+
+sprintf (fmt ,expr -list ): return expr -list formatted according to format string fmt
+
+sub(r ,s) 		: substitute s for the leftmost longest 
+substring of $0 matched by r, return number of substitutions made
+
+sub(r ,s ,t)	:substitute s for the leftmost longest 
+substring of t matched by r, return number of substitutions made
+
+substr (s,p)	: return suffix of s starting at position p
+
+substr (s ,p ,n): return substring of s of length n starting at position p
+
+
+3> exression operators
+
+array membership: i in a => 1 if a[i] exists,0 otherwise
+
+
+
+4>array
+	delete array[i] : an array element may be delected 
+
+	split("7/4/76",arr,"/")
+	=> split '7/4/76' into 3 fields using / as the separator; arr[1] = 7 , arr[2] = 4 ,arr[3]=76
+5> user-defined funcs
+	Ex:
+	{print max($1,max($2,$3))}
+	fuction max(m,n)
+	{
+		return m>n?m:n
+	}
+6> Output 
+	=> output into files
+
+
+	should refer printf format-ctrl char
+				 examples of printf specifications
+
+	awk ( 58/(70/255))
