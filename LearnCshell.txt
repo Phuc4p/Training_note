@@ -1,0 +1,121 @@
+
+
+
+
+----------------------------------------cat cmd-------------------------------------------------
+1>Basic:
+	cat <dir> to view the contents of the <dir> 
+2>Linux cat command: 
+	Creating 1 file from several files
+
+		cat file1 file2 file3 > file4
+		** > :override the file
+		** >>:append the file
+	To view file with line numbers
+
+		cat -n myfile.txt
+----------------------------------------echo cmd-------------------------------------------------
+
+1> Basic
+	echo [options] [string]
+
+2> Options of echo cmd
+	a. echo -e : enable the interpretation '\'
+		1. \b: removes all the spaces in bettween the text
+		ex: echo -e "hi \bhi \bhi"
+
+		2.\n \t
+		3. \r => print string behind '\r'
+		4. \c => print the string to '\c'
+	b. echo -n : omit trailling newline
+
+----------------------------------------C shell-------------------------------------------------
+1> Control structures
+	a.if
+		Syntax: 
+			if(expr) then
+				cmd
+			else if(expr2) then
+				cmd
+			else 
+				cmd
+			endif
+		To check file: if (-e myfile) 
+			d     - file is a directory 
+   			e     - file exists 
+    		f     - file is an ordinary file 
+	     	o     - user owns the file 
+		    r     - user has read access to the file 
+		    w     - user has write access to the file 
+		    x     - user has execute access to the file 
+		    z     - file is zero bytes long 
+	b.foreach/end
+		syntax: 
+			foreach name (wordlist)
+				cmd
+			end
+	c.while/end
+		syntax:
+			while (expression)
+        		commands
+     		end
+    **break,continue like C language
+    d.switch/case/breaksw/endsw
+	    Syntax:
+		    switch (string)
+		    case str1:
+		      commands
+		      breaksw
+		    case str2:
+		      commands
+		      breaksw
+		    ...
+		    default:
+		      commands
+		      breaksw
+		    endsw
+2>Interrupt handling: ^C ( CTRL-C)
+3>To read user input: set var = $<
+4>Redirection: 
+	>>: already known
+	>& and |& : write both of output and STD output ( NOT SURE)
+5> shift [name] : get rid of 1st element of arr
+6> Variable:
+
+syntax: 
+		
+		Use for array:
+		$#arr: length
+        $arr[*]: all elements of variable arr
+		$arr[$]: the last
+		$arr[3-5]: 3rd-5rd element
+		$arr[8-]: eighth to last
+		$?name: defined ? or not
+
+		Use for scalar:
+		${0} the name of the script being run
+		${?name} returns 1 if the name is defined , 0 if it isnt
+		$n gia tri thu n cua argument passed to the script
+		$#argv the number of arguments passed to the script
+		$* all arguments supplied to the script
+		$$ process identification number (usefull for making temporary files with unique names)
+
+7> Braces {...} in argument expansion
+ Ex: A{str1,str2,...,strn}B
+ 	=> Astr1B Astr2B ... AstrnB
+8> Appendix - Special characters
+	Syntactic metacharacters:
+		; spearates commands to excuted sequentially
+		|	1.5	separates commands in a pipeline
+		( )	2.2,3.6	brackets expressions and variable values
+		&	2.5	follows commands to be executed without waiting for completion
+	Filename metacharacters
+
+		/	1.6	separates components of a file's pathname
+		.	1.6	separates root parts of a file name from extensions
+		?	1.6	expansion character matching any single character
+		*	1.6	expansion character matching any sequence of characters
+		[ ]	1.6	expansion sequence matching any single character from a set
+		~	1.6	used at the beginning of a filename to indicate home directories
+		{ }	4.2	used to specify groups of arguments with common parts
+----------------------------------------awk cmd-------------------------------------------------
