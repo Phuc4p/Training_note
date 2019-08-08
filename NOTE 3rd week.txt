@@ -1,0 +1,26 @@
+always and init can't be nested => 2block nay` thuc thi tuan tu
+
+
+
+casex: se~ khong kiem  tra x,z voi nhung bit cung` thu tu
+casez se~ khong kiem tra z voi nhung bit cung thu tu
+
+function == tuan tu
+
+
+1 always 
+
+ma~ may => assemly => dich. nguoc
+
+
+
+litte endian -> thuan tih toan => dia chi? nho? == trong so nho?
+
+
+1.CPU core: thuc thi tap lenh risc-v 32I (in on order , out of order , multithread)
+2.FPU floating point:
+3.MPU : memory protectiton unit
+4. debug PFSS : plaform fs subsystem ( len mang tim hieu core sight-arm)/DMA PFSS
+5.RTG ( random test generator) : tao ra test case => test cho cpu
+6.CompRunner ( instruction set simulatior)  ISS  ( giong nhu mars hoc ktmt)
+7. Performance counter

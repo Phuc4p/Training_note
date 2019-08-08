@@ -1,0 +1,82 @@
+
+
+1>Computational instructions 
+	R-type format:
+		a.syntax : [ins] [rd],[rs1],[rs2] 
+			add sub sll srl sra and or xor slt(2's complemnt) sltu(unsigned)
+	I-type format: 
+		a.syntax : [ins] [rd],[rs1],[imm11:0]
+		b.
+			addi,slli,srli,srai,andi,ori,xori
+			slti  : Set if less than immediate, 2’s complement
+			sltiu : Set if less than immediate, unsigned
+	U-type format:
+		a.syntax : [ins] [rd],[imm32:12]
+			lui   : Load upper immediate //set the upper 20 bits of [rd] to val of 20-bit imm, lower 12bits = 0 
+			auipc : Add upper immediate to pc // add a 20bit upper imm to the pc and write the result to [rd]
+2>Memory access instructions
+	I-type format:
+		a.syntax: ...
+			lb
+			lbu (load byte unsigned)
+			lh
+			lhu
+			lw
+
+			fence pred, succ 	: Memory ordering fence
+			fence.i 			: Instruction memory ordering
+
+
+	S-type format:
+			sb 				
+			sh
+			sw
+3>Memory access ordering
+	beq :SB rs1,rs2,im[12:1]
+	bne	:SB 
+	blt :SB
+	bltu:SB
+	bge :SB
+	bgeu:SB
+	
+	jal :UJ rd,im[20:1] => jump and store PC+4 into [rd]  ,
+
+	jalr:I rd,rs1,im[11:0] => jump to rs1's value + im[11:0]
+4>System instructions
+	1>I type format
+	scall 	: System call
+	sbreak 	: Breakpoint
+
+	csrrw rd, csr, rs1 : Read and write CSR
+	=>copy value of a CSR to rd, overwrite CSR with value of rs1
+
+	csrrc rd, csr, rs1 : Read and clear bits in CSR
+	=> copy old value CSR to rd => any bit set in rs1 ,clear it in CSR
+
+	csrrs rd, csr, rs1 : Read and set bits in CSR
+	=> copy old value CSR to rd => any bit set in rs1 ,SET it in CSR
+ 
+
+	csrrwi rd, csr, imm[4:0] : Read and write CSR with immediate
+	csrrci rd, csr, imm[4:0] : Read and clear bits in CSR with immediate
+	csrrsi rd, csr, imm[4:0] : Read and set bits in CSR with immediate
+
+	=>rs1 is usually control and status regs
+		cycle 	: cycle counter
+		time  	: real-time clk
+		instret	: ins retired counter
+		cycleh 	: upper 32bits of cycle counter
+		timeh	: upper .....
+		instreth: .....
+
+
+	ECALL: invoke the OS to perform syscall
+	EBREAK: invoke debugger
+
+
+
+
+NOTE: To  set a value of the 32bit register: use lui,addi
+
+lr.d
+sc.d
