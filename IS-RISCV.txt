@@ -1,4 +1,4 @@
-
+﻿
 
 1>Computational instructions 
 	R-type format:
@@ -8,7 +8,7 @@
 		a.syntax : [ins] [rd],[rs1],[imm11:0]
 		b.
 			addi,slli,srli,srai,andi,ori,xori
-			slti  : Set if less than immediate, 2�s complement
+			slti  : Set if less than immediate, 2’s complement
 			sltiu : Set if less than immediate, unsigned
 	U-type format:
 		a.syntax : [ins] [rd],[imm32:12]
@@ -32,7 +32,7 @@
 			sh
 			sw
 3>Memory access ordering
-	beq :SB rs1,rs2,im[12:1]
+	beq :SB rs1,rs2,im[12:1] => PC = PC + 4 +im[12:1]*4
 	bne	:SB 
 	blt :SB
 	bltu:SB
@@ -41,8 +41,12 @@
 	
 	jal :UJ rd,im[20:1] => jump and store PC+4 into [rd]  ,
 
-	jalr:I rd,rs1,im[11:0] => jump to rs1's value + im[11:0]
-4>System instructions
+	jalr:I rd,rs1,im[11:0] => jump to rs1's value + im[11:0] ( are deisgned to coupled with AUIPC )
+	=>to jump anywhere in 32bit addr space
+
+4>
+
+	(CSR ACCESS)
 	1>I type format
 	scall 	: System call
 	sbreak 	: Breakpoint
@@ -70,13 +74,60 @@
 		instreth: .....
 
 
-	ECALL: invoke the OS to perform syscall
-	EBREAK: invoke debugger
 
-
-
-
+5>FENCE.I & FENCE(MEM. Ordering)
+	a.FENCE.I: đồng bộ instruction and data stream=> to ensure memory access initiated before the fence ins are completed (A 
+	FENCE.I instruction ensures that a subsequent instruction fetch on a RISC-V hart will see any previous data stores already visible to the same 
+	RISC-V hart.) a thread => if apply in multiprocessor system=> write hart(hardware thread ) has to excute a data FENCE
+	before all remote RISC V hart excute a FENCE.I
+	
+	
+	b.Enforcement of memory ordering is hence made explicit in the ISA. RV32I provides a
+	FENCE instruction that provides an ordering guarantee between memory accesses prior
+	to the fence and subsequent to the fence. The arguments to the fence are two sets, the
+	predecessor set and the successor set, which indicate what type of accesses are to be ordered
+	by the fence: memory reads (R), memory writes (W), device input (I), and device output
+	(O). 
+	c.A store to instruction memory is only guaranteed to be reflected by subsequent instruction 
+	fetches after a FENCE.I has been executed.
+	
+	=>FENCE.I : dam bao du lieu memory cua ins vua moi thuc thi se co the duoc truy cap o next ins
+	=>FENCE: dam bao? thu tu truy cap memory
+.
 NOTE: To  set a value of the 32bit register: use lui,addi
 
-lr.d
-sc.d
+03.Desin ( 113) => ins set of 32i
+
+
+
+6> System ins
+	(name before SCALL and SBREAK)
+	ECALL: invoke the OS to perform system call cuz RISCV cannot define the paras passing convention
+	for systemcall (property of API) 
+	EBREAK:  generate a breakpoint to invoke the debugger
+
+
+
+
+7> Addressing mode 
+
+	1. Immediate addressing, where the operand is a constant within the instruction
+	itself.
+	2. Register addressing, where the operand is a register.
+
+	3. Base or displacement addressing, where the operand is at the memory location
+	whose address is the sum of a register and a constant in the instruction.
+
+	4. PC-relative addressing, where the branch address is the sum of the PC and a
+	constant in the instruction
+	
+
+	Ex:
+	Imm addr : addi , ....
+
+	Reg addr : add,sub,slt
+	
+	basse addr: sb,sd,lw
+
+	PC-relative addressing: beq
+
