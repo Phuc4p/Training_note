@@ -1,0 +1,12 @@
+so sanh giua sra ( barrel shifter ) va` shift verilog bi`nh thuong ( so lg output,input, cong)
+
+
+sua? xxx or zz  ba`ng ? o? casez
+
+
+sua? loi~ o? lenh. add 
+
+sua? alu: 1. day? 2 cong? mux ra ngoai` 
+	  2. sua? lai overflow ( phai? co ca? lenh add va` lenh sub)
+	  3. tach shifter va` nhung~ lenh. ALU khac'
+	  4. tach mux16 thanh mux8 va` mux2
